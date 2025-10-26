@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - Salon Management</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo" style="justify-content: center; margin-bottom: 1rem;">
+                    <div class="logo-icon">B</div>
+                    <div class="logo-text">Beauty Salon</div>
+                </div>
+                <h1 class="login-title">Регистрация</h1>
+                <p class="login-subtitle">Создайте новую учетную запись</p>
+            </div>
+            
+            <form id="register-form">
+                <div class="form-group">
+                    <label class="form-label">Имя пользователя *</label>
+                    <input type="text" id="username" class="form-input" placeholder="Введите имя пользователя" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email *</label>
+                    <input type="email" id="email" class="form-input" placeholder="Введите email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Пароль *</label>
+                    <input type="password" id="password" class="form-input" placeholder="Введите пароль" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Подтвердите пароль *</label>
+                    <input type="password" id="confirm-password" class="form-input" placeholder="Повторите пароль" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    <span id="register-text">Зарегистрироваться</span>
+                    <div id="register-spinner" class="spinner" style="display: none;"></div>
+                </button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <p style="color: var(--text-light); font-size: 0.875rem;">
+                    Уже есть аккаунт? 
+                    <a href="/login" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">Войдите здесь</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/js/auth.js"></script>
+    <script>
+        class Register {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                const registerForm = document.getElementById('register-form');
+                if (registerForm) {
+                    registerForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.register();
+                    });
+                }
+            }
+
+            async register() {
+                const username = document.getElementById('username').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                const registerText = document.getElementById('register-text');
+                const registerSpinner = document.getElementById('register-spinner');
+
+                // Валидация
+                if (password !== confirmPassword) {
+                    this.showNotification('Пароли не совпадают', 'error');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    this.showNotification('Пароль должен быть не менее 6 символов', 'error');
+                    return;
+                }
+
+                registerText.style.display = 'none';
+                registerSpinner.style.display = 'block';
+
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('email', email);
+                formData.append('password', password);
+
+                try {
+                    const response = await fetch('/register', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        window.auth.token = data.access_token;
+                        localStorage.setItem('authToken', window.auth.token);
+                        
+                        // Сохраняем информацию о пользователе
+                        window.auth.user = {
+                            username: data.username,
+                            is_admin: data.is_admin
+                        };
+                        localStorage.setItem('user', JSON.stringify(window.auth.user));
+                        
+                        this.showNotification('Регистрация успешна!', 'success');
+                        
+                        // Перенаправляем в зависимости от роли
+                        setTimeout(() => {
+                            window.location.href = data.is_admin ? '/admin' : '/';
+                        }, 1000);
+                    } else {
+                        const error = await response.json();
+                        this.showNotification(error.detail || 'Ошибка регистрации', 'error');
+                    }
+                } catch (error) {
+                    console.error('Register error:', error);
+                    this.showNotification('Ошибка подключения', 'error');
+                } finally {
+                    registerText.style.display = 'block';
+                    registerSpinner.style.display = 'none';
+                }
+            }
+
+            showNotification(message, type = 'info') {
+                // Remove existing notifications
+                const existingNotifications = document.querySelectorAll('.notification');
+                existingNotifications.forEach(notification => notification.remove());
+
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        }
+
+        // Initialize register when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new Register();
+        });
+    </script>
+</body>
+</html>

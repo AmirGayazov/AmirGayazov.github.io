@@ -1,0 +1,12 @@
+setuptools
+wheel
+fastapi[all]
+uvicorn[standard]
+aiosqlite
+sqlalchemy
+python-multipart
+python-jose[cryptography]
+passlib[bcrypt]
+pydantic
+bcrypt
+python-dotenv

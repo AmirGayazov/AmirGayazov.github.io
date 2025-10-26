@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salon Management - Админка</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="logo-text">Админ-панель</div>
+            </div>
+            
+            <div class="menu">
+                <a class="menu-item active" data-section="pending">
+                    <i class="fas fa-clock"></i>
+                    Ожидающие заявки
+                </a>
+                <a class="menu-item" data-section="history">
+                    <i class="fas fa-history"></i>
+                    История записей
+                </a>
+                <a class="menu-item" data-section="clients">
+                    <i class="fas fa-users"></i>
+                    База клиентов
+                </a>
+                <a class="menu-item" data-section="statistics">
+                    <i class="fas fa-chart-bar"></i>
+                    Статистика
+                </a>
+                <a class="menu-item" data-section="services-mgmt">
+                    <i class="fas fa-concierge-bell"></i>
+                    Управление услугами
+                </a>
+                <a class="menu-item" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    Настройки
+                </a>
+                <div class="menu-item" id="logout-btn" style="margin-top: 2rem; color: var(--error-color);">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="content-header">
+                <h1 class="header-title">Панель управления</h1>
+                <div class="user-menu">
+                    <span class="user-name" id="user-name">Администратор</span>
+                    <div class="user-avatar" id="user-avatar">A</div>
+                </div>
+            </div>
+            
+            <!-- Pending Appointments Section -->
+            <div id="pending-section" class="section active">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Ожидающие подтверждения записи</h2>
+                    </div>
+                    <div id="pending-appointments">
+                        <div class="card">
+                            <p style="text-align: center; color: var(--text-light);">Загрузка...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- History Section -->
+            <div id="history-section" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">История всех записей</h2>
+                    </div>
+                    
+                    <div class="filters" style="margin-bottom: 2rem;">
+                        <form id="history-filters-form">
+                            <div class="grid grid-3">
+                                <div class="form-group">
+                                    <label class="form-label">Статус</label>
+                                    <select id="filter-status" class="form-select">
+                                        <option value="all">Все статусы</option>
+                                        <option value="pending">Ожидает</option>
+                                        <option value="confirmed">Подтверждено</option>
+                                        <option value="completed">Выполнено</option>
+                                        <option value="cancelled">Отменено</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Дата с</label>
+                                    <input type="date" id="filter-date-from" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Дата по</label>
+                                    <input type="date" id="filter-date-to" class="form-input">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-filter"></i>
+                                Применить фильтры
+                            </button>
+                            <button type="button" id="reset-filters" class="btn btn-outline">
+                                <i class="fas fa-redo"></i>
+                                Сбросить
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div id="history-appointments-list">
+                        <div class="card">
+                            <p style="text-align: center; color: var(--text-light);">Используйте фильтры для поиска записей</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Clients Section -->
+            <div id="clients-section" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">База клиентов</h2>
+                    </div>
+                    <div id="clients-list">
+                        <div class="card">
+                            <p style="text-align: center; color: var(--text-light);">Загрузка...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Statistics Section -->
+            <div id="statistics-section" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Статистика и аналитика</h2>
+                    </div>
+                    <div id="stats-content">
+                        <div class="card">
+                            <p style="text-align: center; color: var(--text-light);">Загрузка...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Services Management Section -->
+            <div id="services-mgmt-section" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Управление услугами</h2>
+                    </div>
+                    
+                    <div class="card" style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">Добавить новую услугу</h3>
+                        <form id="service-form">
+                            <div class="grid grid-2">
+                                <div class="form-group">
+                                    <label class="form-label">Название услуги *</label>
+                                    <input type="text" id="service-name" class="form-input" placeholder="Стрижка" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Цена (руб.) *</label>
+                                    <input type="number" id="service-price" class="form-input" placeholder="1500" min="0" step="0.01" required>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-2">
+                                <div class="form-group">
+                                    <label class="form-label">Длительность (минут) *</label>
+                                    <input type="number" id="service-duration" class="form-input" placeholder="60" min="1" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Описание</label>
+                                <textarea id="service-description" class="form-input" rows="3" placeholder="Подробное описание услуги..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                                Добавить услугу
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <h3 style="margin-bottom: 1rem;">Список услуг</h3>
+                    <div id="services-management-list">
+                        <div class="card">
+                            <p style="text-align: center; color: var(--text-light);">Загрузка...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Section -->
+            <div id="settings-section" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Настройки салона</h2>
+                    </div>
+                    
+                    <form id="settings-form">
+                        <div class="form-group">
+                            <label class="form-label">Название бизнеса *</label>
+                            <input type="text" id="business-name" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Адрес</label>
+                            <textarea id="business-address" class="form-input" rows="2" placeholder="Полный адрес салона"></textarea>
+                        </div>
+                        
+                        <div class="grid grid-2">
+                            <div class="form-group">
+                                <label class="form-label">Телефон</label>
+                                <input type="tel" id="business-phone" class="form-input" placeholder="+7 (XXX) XXX-XX-XX">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" id="business-email" class="form-input" placeholder="info@salon.ru">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Часы работы</label>
+                            <textarea id="working-hours" class="form-input" rows="3" placeholder="Пн-Пт: 9:00-21:00&#10;Сб-Вс: 10:00-20:00"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Напоминание о записи (часы)</label>
+                            <input type="number" id="notification-hours" class="form-input" min="1" max="48" value="24">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            Сохранить настройки
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/admin.js"></script>
+</body>
+</html>

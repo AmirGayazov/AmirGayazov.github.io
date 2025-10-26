@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salon Management - Клиент</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-spa"></i>
+                </div>
+                <div class="logo-text">Beauty Salon</div>
+            </div>
+            
+            <div class="menu">
+                <a class="menu-item active" data-section="services">
+                    <i class="fas fa-concierge-bell"></i>
+                    Услуги и цены
+                </a>
+                <a class="menu-item" data-section="appointment">
+                    <i class="fas fa-calendar-plus"></i>
+                    Запись на прием
+                </a>
+                <a class="menu-item" data-section="my-appointments">
+                    <i class="fas fa-history"></i>
+                    Мои записи
+                </a>
+                <a class="menu-item" data-section="directions">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Как добраться
+                </a>
+                <div class="menu-item" id="logout-btn" style="margin-top: 2rem; color: var(--error-color);">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="content-header">
+                <h1 class="header-title">Салон красоты</h1>
+                <div class="user-menu">
+                    <span class="user-name" id="user-name"></span>
+                    <div class="user-avatar" id="user-avatar"></div>
+                </div>
+            </div>
+            
+            <div id="services-section" class="section active">
+                <div class="card">
+                    <h2 style="margin-bottom: 1.5rem;">Наши услуги</h2>
+                    <div id="services-list"></div>
+                </div>
+            </div>
+            
+            <div id="appointment-section" class="section">
+                <div class="card">
+                    <h2 style="margin-bottom: 1.5rem;">Запись на услугу</h2>
+                    <form id="appointment-form">
+                        <div class="grid grid-2">
+                            <div class="form-group">
+                                <label class="form-label">Ваше имя *</label>
+                                <input type="text" id="client-name" class="form-input" placeholder="Иван Иванов" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Телефон *</label>
+                                <input type="tel" id="client-phone" class="form-input" placeholder="+7 (999) 999-99-99" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Услуга *</label>
+                            <select id="service-select" class="form-select" required>
+                                <option value="">Выберите услугу</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Дата и время *</label>
+                            <input type="datetime-local" id="appointment-date" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Примечания (необязательно)</label>
+                            <textarea id="appointment-notes" class="form-input" rows="3" placeholder="Дополнительные пожелания..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-calendar-check"></i>
+                            Записаться
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div id="my-appointments-section" class="section">
+                <div class="card">
+                    <h2 style="margin-bottom: 1.5rem;">Мои записи</h2>
+                    <form id="search-appointments-form">
+                        <div class="form-group">
+                            <label class="form-label">Введите ваш номер телефона для поиска записей</label>
+                            <input type="tel" id="search-phone" class="form-input" placeholder="+7 (999) 999-99-99" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                            Найти записи
+                        </button>
+                    </form>
+                    
+                    <div id="appointments-history" style="margin-top: 2rem;">
+                        <h3>История ваших записей</h3>
+                        <div id="appointments-list">
+                            <p style="text-align: center; color: var(--text-light);">
+                                Введите номер телефона для поиска записей
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="directions-section" class="section">
+                <div class="card">
+                    <h2 style="margin-bottom: 1.5rem;">Как добраться</h2>
+                    <div id="directions-content">
+                        <div style="margin-bottom: 1.5rem;">
+                            <h3 style="margin-bottom: 0.5rem;">Наш адрес</h3>
+                            <p style="color: var(--text-light);">г. Москва, ул. Примерная, д. 123</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h3 style="margin-bottom: 0.5rem;">Часы работы</h3>
+                            <p style="color: var(--text-light);">Пн-Пт: 9:00 - 21:00</p>
+                            <p style="color: var(--text-light);">Сб-Вс: 10:00 - 20:00</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h3 style="margin-bottom: 0.5rem;">Контакты</h3>
+                            <p style="color: var(--text-light); margin-bottom: 0.5rem;">
+                                <i class="fas fa-phone"></i> +7 (495) 123-45-67
+                            </p>
+                            <p style="color: var(--text-light);">
+                                <i class="fas fa-envelope"></i> info@beautysalon.ru
+                            </p>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                            <p style="color: var(--text-light); margin: 0;">
+                                <i class="fas fa-info-circle"></i> 
+                                Ближайшая станция метро: "Примерная" (5 минут пешком)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
